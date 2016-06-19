@@ -23,6 +23,7 @@ class ErrorPresenter extends Nette\Object implements Nette\Application\IPresente
 	 */
 	public function run(Nette\Application\Request $request)
 	{
+        die("eeerrrooore");
 		$e = $request->getParameter('exception');
 
 		if ($e instanceof Nette\Application\BadRequestException) {

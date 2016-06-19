@@ -10,7 +10,7 @@ php:
 
 
 application:
-	errorPresenter: Error
+	errorPresenter: RestError
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 
@@ -24,6 +24,12 @@ services:
 	- App\Forms\FormFactory
 	- App\Forms\SignFormFactory
 	router: App\RouterFactory::createRouter
+	- App\Model\OAuthRepository
+
+	keyGenerator:
+		class: App\lib\KeyGenerator\OpenSSLGenerator
+		arguments:
+			- "sha256"
 
 restful:
     convention: 'snake_case'
@@ -45,12 +51,3 @@ restful:
         requestTimeKey: 'timestamp'
         requestTimeout: 300
 
-oauth2:
-    accessTokenLifetime: 3600 # 1 hour
-    refreshTokenLifetime: 36000 # 10 hours
-    authorizationCodeLifetime: 360 # 6 minutes
-    storage: 'ndb' # allowed values: 'ndb', 'dibi'
-    accessTokenStorage: 'Drahak\OAuth2\Storage\NDB\AccessTokenStorage'
-    authorizationCodeStorage: 'Drahak\OAuth2\Storage\NDB\AuthorizationCodeStorage'
-    clientStorage: 'Drahak\OAuth2\Storage\NDB\ClientStorage'
-    refreshTokenStorage: 'Drahak\OAuth2\Storage\NDB\RefreshTokenStorage'

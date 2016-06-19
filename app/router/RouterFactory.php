@@ -29,6 +29,14 @@ class RouterFactory
             )
         ), ResourceRoute::GET | ResourceRoute::DELETE);
 
+        $router[] = new ResourceRoute("token",[
+                'presenter' => 'OAuth',
+                'action' => [ResourceRoute::POST => 'token']
+            ],ResourceRoute::POST
+
+        );
+
+
         $router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
 
         return $router;

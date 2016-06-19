@@ -11,7 +11,7 @@ namespace App\Presenters;
 
 use Drahak\Restful\Application\UI\ResourcePresenter;
 
-class CrudPresenter extends ResourcePresenter{
+class CrudPresenter extends BasePresenter{
 
     public function actionCreate()
     {
@@ -20,16 +20,20 @@ class CrudPresenter extends ResourcePresenter{
 
     public function actionRead()
     {
+        $this->authorize();
         $this->resource->action = 'Read';
     }
 
     public function actionUpdate()
     {
+        $this->authorize();
         $this->resource->action = 'Update';
 
 
         $this->resource->message = isset($this->input->message) ? $this->input->message : 'no message';
-        $this->resource->aaa = $this->input->aaa;
+
+        $this->resource->client = $this->clientId;
+        $this->resource->user = $this->userId;
 
 
     }
