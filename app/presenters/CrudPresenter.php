@@ -11,7 +11,7 @@ namespace App\Presenters;
 
 use Drahak\Restful\Application\UI\ResourcePresenter;
 
-class CrudPresenter extends BasePresenter{
+class CrudPresenter extends SecurePresenter{
 
     public function actionCreate()
     {

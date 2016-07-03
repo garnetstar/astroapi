@@ -49,9 +49,13 @@ class OAuthFacade
         $this->refreshTokenDuration = $refreshTokenDuration;
     }
 
-    public function authorize($userId, $clientId, $accessToken)
+    public function authorize($accessToken)
     {
+        if (! $token = $this->accessTokenRepository->getAccessToken($accessToken)) {
+            throw new NotFoundException('access_token not found');
+        }
 
+        return $token;
     }
 
     /**

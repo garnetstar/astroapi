@@ -22,4 +22,11 @@ class AccessTokenRepository extends AbstractRepository
         ]);
 
     }
+
+    public function getAccessToken($accessToken)
+    {
+        $token = $this->database->query('SELECT user_id, client_id FROM `access_token` WHERE access_token=? AND expire>NOW()', $accessToken);
+
+        return $token->fetch();
+    }
 }
