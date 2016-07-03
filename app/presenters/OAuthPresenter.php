@@ -9,12 +9,11 @@
 namespace App\Presenters;
 
 
+use App\Model\Facade\Error\NotFoundException;
 use App\Model\OAuthRepository;
 use Drahak\Restful\Application\BadRequestException;
-use Drahak\Restful\Application\UI\ResourcePresenter;
-use Nette\Neon\Exception;
 
-class OAuthPresenter extends ResourcePresenter
+class OAuthPresenter extends BasePresenter
 {
     public function actionToken()
     {
@@ -22,10 +21,23 @@ class OAuthPresenter extends ResourcePresenter
             throw new \Exception('Reques does not contain proper field', 400);
         };
 
-        if (!$token = $this->oAuthRepository->getToken($this->input->login, $this->input->password, $this->input->client_id)) {
+        $duration = 3600;
+
+        try {
+            $token = $this->oAuthFacade->getToken($this->input->login, $this->input->password, $this->input->client_id);
+        } catch (NotFoundException $e) {
             throw BadRequestException::unauthorized('unauthorized');
         }
 
-        return $this->resource->token = $token;
+        $this->resource->access_token = $token['accessToken'];
+        $this->resource->token_type = "bearer";
+        $this->resource->expires_in = $duration;
+        $this->resource->refresh_token = $token['refreshToken'];
+
+    }
+
+    private function getRefreshToken($userId)
+    {
+
     }
 }

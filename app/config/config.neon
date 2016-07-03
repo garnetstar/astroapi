@@ -3,6 +3,9 @@
 # https://nette.org/security-warning
 #
 parameters:
+	duration:
+		accessToken: 3600
+		refreshToken: 2592000
 
 
 php:
@@ -24,12 +27,23 @@ services:
 	- App\Forms\FormFactory
 	- App\Forms\SignFormFactory
 	router: App\RouterFactory::createRouter
-	- App\Model\OAuthRepository
+
+	- App\Model\Repository\UserRepository
+	- App\Model\Repository\AccessTokenRepository
+	- App\Model\Repository\RefreshTokenRepository
+
+	- App\lib\ExpirationFactory
 
 	keyGenerator:
 		class: App\lib\KeyGenerator\OpenSSLGenerator
 		arguments:
 			- "sha256"
+
+	OAuthFacade:
+		class: App\Model\Facade\OAuthFacade
+		arguments:
+			- %duration.accessToken%
+			- %duration.refreshToken%
 
 restful:
     convention: 'snake_case'
