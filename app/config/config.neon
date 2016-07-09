@@ -7,6 +7,9 @@ parameters:
 		accessToken: 3600
 		refreshToken: 2592000
 
+	collection:
+		perPage: 10
+
 
 php:
 	date.timezone: Europe/Prague
@@ -31,6 +34,7 @@ services:
 	- App\Model\Repository\UserRepository
 	- App\Model\Repository\AccessTokenRepository
 	- App\Model\Repository\RefreshTokenRepository
+	- App\Model\Repository\DataRepository
 
 	- App\lib\ExpirationFactory
 

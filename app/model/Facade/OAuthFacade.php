@@ -49,6 +49,11 @@ class OAuthFacade
         $this->refreshTokenDuration = $refreshTokenDuration;
     }
 
+    /**
+     * @param $accessToken
+     * @return bool|\Nette\Database\IRow|\Nette\Database\Row
+     * @throws Error\NotFoundException
+     */
     public function authorize($accessToken)
     {
         if (! $token = $this->accessTokenRepository->getAccessToken($accessToken)) {

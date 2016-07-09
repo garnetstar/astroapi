@@ -3,10 +3,10 @@
 namespace App\Presenters;
 
 use App\Model\Facade\OAuthFacade;
-use Drahak\Restful\Application\BadRequestException;
 use Drahak\Restful\Application\UI\ResourcePresenter;
+use Drahak\Restful\InvalidStateException;
+use Drahak\Restful\Resource\Link;
 use Nette;
-
 
 /**
  * Base presenter for all application presenters.
@@ -18,6 +18,12 @@ abstract class BasePresenter extends ResourcePresenter
     /** @var  int */
     protected $clientId;
 
+    /** @var  Nette\Utils\Paginator */
+    protected $paginator;
+
+    /** @var  int */
+    protected $actualPage;
+
     /** @var  OAuthFacade */
     protected $oAuthFacade;
 
@@ -26,14 +32,44 @@ abstract class BasePresenter extends ResourcePresenter
         $this->oAuthFacade = $OAuthFacade;
     }
 
-    public function authorize()
+    /**
+     * @return Nette\Utils\Paginator
+     * @throws \Drahak\Restful\InvalidStateException
+     */
+    protected function initPaginator()
     {
-//        if (!isset($this->input->access_token) || !$user = $this->oAuthRepository->authorize($this->input->access_token)) {
-//            throw BadRequestException::unauthorized('unauthorized');
-//        }
+        if (!$this->paginator) {
+            $this->paginator = new Nette\Utils\Paginator();
+            $perPage = $this->context->parameters['collection']['perPage'];
+            $this->paginator->setItemsPerPage($perPage);
+        }
 
-//        $this->userId = $user['user_id'];
-//        $this->clientId = $user['client_id'];
+        $page = isset($this->input->page) ? $this->input->page : 1;
+
+        if (!is_int($page) || $page < 1) {
+            throw new InvalidStateException('To create paginator page query parameter to request URL');
+        }
+
+        $this->paginator->setPage($page);
+
+        return $this->paginator;
     }
+
+    protected function setPaginationToHeader()
+    {
+        $count = $this->paginator->getItemCount();
+        $page = $this->paginator->getPage();
+
+        $this->getHttpResponse()->addHeader('X-Total-Count', $count);
+        if (!$this->paginator->last) {
+            $url = $this->getHttpRequest()->getUrl();
+            parse_str($url->getQuery(), $query);
+            $query['page'] = ++$page;
+            $url->appendQuery($query);
+            $link = new Link($url, Link::NEXT);
+            $this->getHttpResponse()->addHeader('Link', $link);
+        }
+    }
+
 
 }

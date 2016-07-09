@@ -12,12 +12,19 @@ use Nette\Application\Routers\Route;
 class RouterFactory
 {
 
-	/**
-	 * @return Nette\Application\IRouter
-	 */
-	public static function createRouter()
-	{
-		$router = new RouteList;
+    /**
+     * @return Nette\Application\IRouter
+     */
+    public static function createRouter()
+    {
+        $router = new RouteList;
+
+        $router[] = new ResourceRoute("messierData", [
+            'presenter' => 'Data',
+            'action' => [
+                ResourceRoute::GET => 'messierData'
+            ]
+        ]);
 
         $router[] = new CrudRoute('api/v1/<presenter>[/<id>[/<relation>[/<relationId>]]]', 'Sample');
 
@@ -29,17 +36,17 @@ class RouterFactory
             )
         ), ResourceRoute::GET | ResourceRoute::DELETE);
 
-        $router[] = new ResourceRoute("token",[
+        $router[] = new ResourceRoute("token", [
                 'presenter' => 'OAuth',
                 'action' => [ResourceRoute::POST => 'token']
-            ],ResourceRoute::POST
+            ], ResourceRoute::POST
 
         );
 
-
         $router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
 
+
         return $router;
-	}
+    }
 
 }
