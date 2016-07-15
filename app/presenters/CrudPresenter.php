@@ -22,6 +22,8 @@ class CrudPresenter extends SecurePresenter{
     {
         $this->authorize();
         $this->resource->action = 'Read';
+
+        $this->resource->data = ['ssdfsf'=> 'ss','sse'=>'rer'];
     }
 
     public function actionUpdate()

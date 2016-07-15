@@ -44,9 +44,9 @@ abstract class BasePresenter extends ResourcePresenter
             $this->paginator->setItemsPerPage($perPage);
         }
 
-        $page = isset($this->input->page) ? $this->input->page : 1;
+        $page = isset($this->input->page) ? (int) $this->input->page : 1;
 
-        if (!is_int($page) || $page < 1) {
+        if ($page < 1) {
             throw new InvalidStateException('To create paginator page query parameter to request URL');
         }
 
@@ -70,6 +70,4 @@ abstract class BasePresenter extends ResourcePresenter
             $this->getHttpResponse()->addHeader('Link', $link);
         }
     }
-
-
 }

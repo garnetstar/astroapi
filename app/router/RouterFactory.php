@@ -43,6 +43,11 @@ class RouterFactory
 
         );
 
+        $router[] = new ResourceRoute("<diary>/<list>[/<id>]", [
+            'presenter'=>'Diary',
+            'action'=> [ResourceRoute::GET => 'list']
+        ]);
+
         $router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
 
 

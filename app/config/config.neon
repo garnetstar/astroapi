@@ -35,8 +35,11 @@ services:
 	- App\Model\Repository\AccessTokenRepository
 	- App\Model\Repository\RefreshTokenRepository
 	- App\Model\Repository\DataRepository
+	- App\Model\Repository\DiaryRepository
 
 	- App\lib\ExpirationFactory
+
+	- App\Model\Facade\DiaryFacade
 
 	keyGenerator:
 		class: App\lib\KeyGenerator\OpenSSLGenerator
