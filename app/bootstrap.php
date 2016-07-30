@@ -5,7 +5,7 @@ require __DIR__ . '/../vendor/autoload.php';
 $configurator = new Nette\Configurator;
 
 //$configurator->setDebugMode('23.75.345.200'); // enable for your remote IP
-//$configurator->setDebugMode(false);
+$configurator->setDebugMode(false);
 
 $environment = \Nette\Configurator::detectDebugMode() ? "development" : "production";
 $configurator->addConfig(__DIR__ . '/config/config.neon');

@@ -15,6 +15,7 @@ use App\Model\Facade\Error\NotFoundException;
 use App\Model\Repository\AccessTokenRepository;
 use App\Model\Repository\RefreshTokenRepository;
 use App\Model\Repository\UserRepository;
+use Nette\FileNotFoundException;
 
 class OAuthFacade
 {
@@ -56,7 +57,7 @@ class OAuthFacade
      */
     public function authorize($accessToken)
     {
-        if (! $token = $this->accessTokenRepository->getAccessToken($accessToken)) {
+        if (!$token = $this->accessTokenRepository->getAccessToken($accessToken)) {
             throw new NotFoundException('access_token not found');
         }
 
@@ -96,8 +97,18 @@ class OAuthFacade
         return ['accessToken' => $newAccessToken, 'refreshToken' => $refreshToken];
     }
 
-    public function getRefreshToken($userId, $clientId, $refreshToken)
+    public function getTokenByRefreshToken($clientId, $refreshToken)
     {
+        if (!$token = $this->refreshTokenRepository->getRefreshToken($clientId, $refreshToken)) {
+            throw new FileNotFoundException("Refresh token does not exists");
+        }
 
+        $newAccessToken = $this->keyGenerator->getKey();
+        $expiration = $this->expirationFactory->getExpiredTime($this->accessTokenDuration);
+
+        $this->accessTokenRepository->addAccessToken($newAccessToken, $token->user_id, $token->client_id, $expiration);
+
+        return $newAccessToken;
     }
+
 }

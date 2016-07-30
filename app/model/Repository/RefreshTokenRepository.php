@@ -12,9 +12,9 @@ namespace App\Model\Repository;
 class RefreshTokenRepository extends AbstractRepository
 {
 
-    public function getRefreshToken($userId, $clientId)
+    public function getRefreshToken($clientId, $refreshToken)
     {
-        $token = $this->database->query('SELECT refresh_token FROM `refresh_token` WHERE user_id=? AND client_id=? AND expire > NOW()', $userId, $clientId);
+        $token = $this->database->query('SELECT * FROM `refresh_token` WHERE client_id=? AND refresh_token=? AND expire > NOW()', $clientId, $refreshToken);
         return $token->fetch();
     }
 

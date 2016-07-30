@@ -19,6 +19,14 @@ class RouterFactory
     {
         $router = new RouteList;
 
+        $router[] = new ResourceRoute("diary[/<id>]", [
+            'presenter' => 'Diary',
+            'action' => array(
+                ResourceRoute::GET => 'list',
+                ResourceRoute::POST => 'update'
+            )
+        ], ResourceRoute::POST | ResourceRoute::GET);
+
         $router[] = new ResourceRoute("messierData", [
             'presenter' => 'Data',
             'action' => [
@@ -26,15 +34,15 @@ class RouterFactory
             ]
         ]);
 
-        $router[] = new CrudRoute('api/v1/<presenter>[/<id>[/<relation>[/<relationId>]]]', 'Sample');
+//        $router[] = new CrudRoute('api/v1/<presenter>[/<id>[/<relation>[/<relationId>]]]', 'Sample');
 
-        $router[] = new ResourceRoute('test', array(
-            'presenter' => 'Sample',
-            'action' => array(
-                ResourceRoute::GET => 'content',
-                ResourceRoute::DELETE => 'delete'
-            )
-        ), ResourceRoute::GET | ResourceRoute::DELETE);
+//        $router[] = new ResourceRoute('test', array(
+//            'presenter' => 'Sample',
+//            'action' => array(
+//                ResourceRoute::GET => 'content',
+//                ResourceRoute::DELETE => 'delete'
+//            )
+//        ), ResourceRoute::GET | ResourceRoute::DELETE);
 
         $router[] = new ResourceRoute("token", [
                 'presenter' => 'OAuth',
@@ -43,10 +51,6 @@ class RouterFactory
 
         );
 
-        $router[] = new ResourceRoute("<diary>/<list>[/<id>]", [
-            'presenter'=>'Diary',
-            'action'=> [ResourceRoute::GET => 'list']
-        ]);
 
         $router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
 
