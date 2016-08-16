@@ -36,7 +36,8 @@ class OAuthPresenter extends BasePresenter
         }
     }
 
-    private function accessToken() {
+    private function accessToken()
+    {
 
         $this->properFieldException(['login', 'password', 'client_id']);
 
@@ -53,7 +54,11 @@ class OAuthPresenter extends BasePresenter
     {
         $this->properFieldException(['refresh_token', 'client_id']);
 
-        $token = $this->oAuthFacade->getTokenByRefreshToken($this->input->client_id, $this->input->refresh_token);
+        try {
+            $token = $this->oAuthFacade->getTokenByRefreshToken($this->input->client_id, $this->input->refresh_token);
+        } catch (NotFoundException $e) {
+            throw BadRequestException::unauthorized('refresh token not found or expired');
+        }
 
         $this->tokenResponse($token, $this->input->refresh_token);
     }
@@ -62,7 +67,8 @@ class OAuthPresenter extends BasePresenter
      * @param array $fields
      * @throws \Exception
      */
-    private function properFieldException(array $fields) {
+    private function properFieldException(array $fields)
+    {
         foreach ($fields as $field) {
             if (!isset($this->input->$field)) {
                 throw new \Exception('Reques does not contain proper field', 400);
@@ -70,7 +76,8 @@ class OAuthPresenter extends BasePresenter
         }
     }
 
-    private function tokenResponse($accessToken, $refreshToken) {
+    private function tokenResponse($accessToken, $refreshToken)
+    {
         $this->resource->access_token = $accessToken;
         $this->resource->token_type = "bearer";
         $this->resource->expires_in = $this->duration;

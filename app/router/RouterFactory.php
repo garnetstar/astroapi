@@ -34,15 +34,12 @@ class RouterFactory
             ]
         ]);
 
-//        $router[] = new CrudRoute('api/v1/<presenter>[/<id>[/<relation>[/<relationId>]]]', 'Sample');
-
-//        $router[] = new ResourceRoute('test', array(
-//            'presenter' => 'Sample',
-//            'action' => array(
-//                ResourceRoute::GET => 'content',
-//                ResourceRoute::DELETE => 'delete'
-//            )
-//        ), ResourceRoute::GET | ResourceRoute::DELETE);
+        $router[] = new ResourceRoute("messierData/version", [
+            'presenter' => 'Data',
+            'action' => [
+                ResourceRoute::GET => 'version'
+            ]
+        ]);
 
         $router[] = new ResourceRoute("token", [
                 'presenter' => 'OAuth',

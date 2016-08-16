@@ -35,4 +35,9 @@ class DataRepository extends AbstractRepository
         $count = $this->database->query("SELECT FOUND_ROWS() AS `found_rows` LIMIT 1")->fetch();
         return ['data' => $data->fetchAll(), 'count' => $count['found_rows']];
     }
+
+    public function getMessierDataVersion() {
+        $data = $this->database->query('SELECT `val` FROM `settings` WHERE `key`=?', "messierDataVersion");
+        return $data->fetchField('val');
+    }
 }

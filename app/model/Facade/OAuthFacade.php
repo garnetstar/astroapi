@@ -100,7 +100,7 @@ class OAuthFacade
     public function getTokenByRefreshToken($clientId, $refreshToken)
     {
         if (!$token = $this->refreshTokenRepository->getRefreshToken($clientId, $refreshToken)) {
-            throw new FileNotFoundException("Refresh token does not exists");
+            throw new NotFoundException("Refresh token does not exists");
         }
 
         $newAccessToken = $this->keyGenerator->getKey();

@@ -38,8 +38,13 @@ class DataPresenter extends SecurePresenter
 
         $this->paginator->setItemCount($count);
 
-        $this->resource = $data['data'];
+        $this->resource = ['list' => $data['data']];
 
         $this->setPaginationToHeader();
+    }
+
+    public function actionVersion()
+    {
+        $this->resource = ['version' => $this->dataRepository->getMessierDataVersion()];
     }
 }
