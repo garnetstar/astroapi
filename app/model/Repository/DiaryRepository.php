@@ -12,9 +12,11 @@ namespace App\Model\Repository;
 class DiaryRepository extends AbstractRepository
 {
 
-    public function getData($counter)
+    public function getData($counter, $user_id)
     {
-        $data = $this->database->query('SELECT * FROM `diary` WHERE `counter` > ?', $counter);
+        $data = $this->database->query('
+        SELECT * FROM `diary`
+        WHERE `counter` > ? AND `user_id`=?', $counter, $user_id);
         return $data->fetchAll();
     }
 
@@ -57,5 +59,12 @@ class DiaryRepository extends AbstractRepository
     {
         $data = $this->database->query('SELECT * FROM `diary` WHERE `guid`=?', $guid);
         return $data->fetch();
+    }
+
+    /**
+     * @return int
+     */
+    public function getNextAutoincrement() {
+        return $this->database->query('select max(diary_id)+1 as last_diary_id from diary')->fetch()['last_diary_id'];
     }
 }

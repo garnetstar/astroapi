@@ -13,6 +13,7 @@ use App\Model\Repository\DiaryRepository;
 use App\Model\Repository\SettingsRepository;
 use Drahak\Restful\Application\BadRequestException;
 use Nette\Database\UniqueConstraintViolationException;
+use Tracy\Debugger;
 
 class DiaryFacade
 {
@@ -28,11 +29,16 @@ class DiaryFacade
         $this->settingsRepository = $settingsRepository;
     }
 
-    public function syncTo($counter)
+    public function syncTo($counter, $user_id)
     {
 //        $this->settingsRepository->increaseCounter();
         $serverCounter = $this->settingsRepository->getCounter();
-        return ['objects' => $this->diaryRepository->getData($counter), 'servercounter' => $serverCounter['val']];
+        $lastAutoincrement = $this->diaryRepository->getNextAutoincrement();
+        return [
+            'objects' => $this->diaryRepository->getData($counter, $user_id),
+            'servercounter' => $serverCounter,
+            'next_id' => $lastAutoincrement
+        ];
     }
 
     public function syncFrom($objects, $counter)

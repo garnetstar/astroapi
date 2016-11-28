@@ -15,7 +15,14 @@ class UserRepository extends AbstractRepository
     {
         $user = $this->database->query('SELECT user_id, client_id FROM `user` WHERE login=? AND password=? AND client_id=?', $login, $password, $clientId);
         return $user->fetch();
+    }
 
+    /**
+     * @param $accessToken
+     * @return integer
+     */
+    public function getUserIdByAccessToken($accessToken) {
+        return $this->database->query('SELECT `user_id` FROM `access_token` WHERE `access_token`=?', $accessToken)->fetch()['user_id'];
     }
 
 } 

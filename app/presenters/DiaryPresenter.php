@@ -11,6 +11,7 @@ namespace App\Presenters;
 
 use App\Model\Facade\DiaryFacade;
 use App\Model\Repository\SettingsRepository;
+use App\Model\Repository\UserRepository;
 use Drahak\Restful\Application\BadRequestException;
 
 class DiaryPresenter extends SecurePresenter
@@ -22,10 +23,14 @@ class DiaryPresenter extends SecurePresenter
     /** @var  SettingsRepository */
     private $settingsRepository;
 
-    public function injectDiaryFacade(DiaryFacade $diaryFacade, SettingsRepository $settingsRepository)
+    /** @var  UserRepository */
+    private $userRepository;
+
+    public function injectDiaryFacade(DiaryFacade $diaryFacade, SettingsRepository $settingsRepository, UserRepository $userRepository)
     {
         $this->diaryFacade = $diaryFacade;
         $this->settingsRepository = $settingsRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -33,7 +38,8 @@ class DiaryPresenter extends SecurePresenter
      */
     public function actionList($id)
     {
-        $this->resource = $this->diaryFacade->syncTo($id);
+        $user_id = $this->userRepository->getUserIdByAccessToken($this->input->access_token);
+        $this->resource = $this->diaryFacade->syncTo($id, $user_id);
     }
 
     /**
