@@ -15,6 +15,8 @@ use Drahak\Restful\Application\BadRequestException;
 class SecurePresenter extends BasePresenter
 {
 
+    protected $authToken;
+
     public function startup()
     {
         parent::startup();
@@ -24,9 +26,8 @@ class SecurePresenter extends BasePresenter
         }
 
         try {
-
             $user = $this->oAuthFacade->authorize($this->input->access_token);
-
+            $this->authToken = $this->input->access_token;
         } catch (NotFoundException $e) {
             throw BadRequestException::unauthorized('unauthorized');
         }

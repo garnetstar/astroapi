@@ -1,0 +1,55 @@
+{block content}
+{form addForm}
+
+<div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+        <form n:name="addForm">
+            <div class="form-group">
+                <label for="from">From</label>
+                <input type="datetime-local" value="{$actualTime}" class="form-control"
+                       id="from" n:name="from">
+            </div>
+            <div class="form-group">
+                <label for="to">Password</label>
+                <input n:name="to" type="datetime-local" class="form-control" value="{$actualTime}" id="to"
+                       placeholder="Password">
+            </div>
+
+            <div class="form-group">
+                <label for="latitude">Latitude</label>
+                <input n:name="latitude" type="text" class="form-control" id="latitude"
+                       placeholder="Latitude">
+            </div>
+
+            <div class="form-group">
+                <label for="longitude">Longitude</label>
+                <input n:name="longitude" type="text" class="form-control" id="longitude"
+                       placeholder="Longitude">
+            </div>
+
+            <div class="form-group">
+                <label for="weather">Weather</label>
+                <textarea n:name="weather" class="form-control" id="weather" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="log">Log</label>
+                <textarea n:name="log" class="form-control" id="log" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="notice">Log</label>
+                <textarea n:name="notice" class="form-control" id="notice" rows="3"></textarea>
+            </div>
+
+
+            <button type="submit" n:name="add" class="btn btn-primary">Submit</button>
+
+            <input type="hidden" n:name="userId"/>
+        </form>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+{/form}

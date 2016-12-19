@@ -71,12 +71,14 @@ class DiaryPresenter extends SecurePresenter
      */
     public function actionUpdate($id)
     {
+        /* @todo je to tu potreba??? */
+        $counter = $id;
 
         if (!isset($this->input->objects)) {
             throw BadRequestException::unprocessableEntity([], 'Wrong data format');
         }
 
-        $this->diaryFacade->syncFrom($this->input->objects, $this->input->counter);
+        $this->diaryFacade->syncFrom($this->input->objects, $this->authToken, $counter);
 
         $serverCounter = $this->settingsRepository->getCounter();
         $this->resource->serverCounter = $serverCounter;

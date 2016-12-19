@@ -29,29 +29,34 @@ class DiaryRepository extends AbstractRepository
      * @param $log
      * @param $notice
      */
-    public function add($guid, $from, $to, $location, $weather, $log, $notice)
+    public function add($userId, $guid, $from, $to,  $latitude, $longitude, $weather, $log, $notice, $deleted)
     {
         $this->database->query('INSERT INTO `diary`', [
             'guid' => $guid,
             'from' => $from,
             'to' => $to,
-            'location' => $location,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
             'weather' => $weather,
             'log' => $log,
-            'notice' => $notice
+            'notice' => $notice,
+            'user_id'=> $userId,
+            'deleted' => $deleted
         ]);
     }
 
-    public function update($guid, $from, $to, $location, $weather, $log, $notice)
+    public function update($userId, $guid, $from, $to, $latitude, $longitude, $weather, $log, $notice, $deleted)
     {
         $this->database->query('UPDATE `diary` SET ? WHERE `guid`=?', [
-            'guid' => $guid,
             'from' => $from,
             'to' => $to,
-            'location' => $location,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
             'weather' => $weather,
             'log' => $log,
-            'notice' => $notice
+            'notice' => $notice,
+            'user_id'=>$userId,
+            'deleted'=> $deleted
         ], $guid);
     }
 
@@ -61,10 +66,31 @@ class DiaryRepository extends AbstractRepository
         return $data->fetch();
     }
 
+    public function getOneByDiaryId($diaryId) {
+        $data = $this->database->query('SELECT * FROM `diary` WHERE  `diary_id`=?', $diaryId);
+        return $data->fetch();
+    }
+
     /**
      * @return int
      */
     public function getNextAutoincrement() {
-        return $this->database->query('select max(diary_id)+1 as last_diary_id from diary')->fetch()['last_diary_id'];
+        return $this->database->query('select max(diary_id) as last_diary_id from diary')->fetch()['last_diary_id'];
+    }
+
+    /**
+     * @param $userId
+     * @return array|\Nette\Database\IRow[]
+     */
+    public function getActualItems($userId) {
+       return $this->database->query('SELECT * FROM `diary` WHERE user_id=? AND deleted=0', $userId)->fetchAll();
+    }
+
+    /**
+     * @param $diary_id
+     * @return \Nette\Database\ResultSet
+     */
+    public function softDelete($diary_id) {
+       return $this->database->query('UPDATE `diary` SET `deleted`=1 WHERE diary_id=?', $diary_id);
     }
 }

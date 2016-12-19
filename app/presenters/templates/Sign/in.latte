@@ -1,6 +1,26 @@
 {block content}
-<h1 n:block=title>Sign in</h1>
 
-{control signInForm}
+        {form signInForm}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+            <h1 class="text-center login-title">Sign in to continue to Bootsnipp</h1>
+            <div>
 
-{* or use {include '../components/form.latte', form => signInForm} *}
+                {if count($form->errors) > 0}
+                <div class="alert alert-warning" role="alert">
+                    <strong>Warning!</strong> {$form->errors[0]}
+                </div>
+                {/if}
+                <form n:name="signInForm" class="form-signin">
+                    <input n:name="username" type="text" class="form-control" placeholder="Email" required autofocus>
+                    <input n:name="password" type="password" class="form-control" placeholder="Password" required>
+                    <button n:name="send" class="btn btn-lg btn-primary btn-block" type="submit">
+                        Sign in</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/form}
