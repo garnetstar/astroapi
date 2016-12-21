@@ -42,50 +42,32 @@ class DiaryPresenter extends SecurePresenter
         $this->resource = $this->diaryFacade->syncTo($id, $user_id);
     }
 
-    /**
-     * @POST diary[.<type xml|json>]
-     * "objects": [
-     * {
-     * "guid": 3,
-     * "from": "-001-11-30T00:00:00+01:00",
-     * "to": "2016-07-22T00:00:00+02:00",
-     * "location": "",
-     * "weather": "",
-     * "log": "",
-     * "notice": "",
-     * "counter": 3,
-     * "created": "2016-07-18T07:41:03+02:00"
-     * },
-     * {
-     * "guid": 3,
-     * "from": "-001-11-30T00:00:00+01:00",
-     * "to": "2016-07-22T00:00:00+02:00",
-     * "location": "",
-     * "weather": "",
-     * "log": "",
-     * "notice": "",
-     * "counter": 3,
-     * "created": "2016-07-18T07:41:03+02:00"
-     * }
-     * ]
-     */
-    public function actionUpdate($id)
+    /*
+    { "objects": [
     {
-        /* @todo je to tu potreba??? */
-        $counter = $id;
-
+      "guid": "39-1",
+      "from": "2016-12-20 13:52:00",
+      "to": "2016-12-21 13:52:00",
+      "row_counter": 4,
+      "latitude": "",
+      "longitude": "",
+      "weather": "polojasno místy trakaře",
+      "log": "",
+      "timestamp": "2016-12-20 13:53:06",
+      "deleted": 0,
+      "new": 0
+         }
+        ]
+    }
+     */
+    public function actionUpdate()
+    {
         if (!isset($this->input->objects)) {
             throw BadRequestException::unprocessableEntity([], 'Wrong data format');
         }
 
-        $this->diaryFacade->syncFrom($this->input->objects, $this->authToken, $counter);
-
-        $serverCounter = $this->settingsRepository->getCounter();
-        $this->resource->serverCounter = $serverCounter;
-
+        $this->diaryFacade->syncFrom($this->input->objects, $this->authToken);
         $this->resource->status = 'ok';
-
-
     }
 
 }

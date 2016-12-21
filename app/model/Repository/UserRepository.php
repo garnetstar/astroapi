@@ -8,12 +8,15 @@
 
 namespace App\Model\Repository;
 
+use Nette\Security\Passwords;
+use Tracy\Debugger;
+
 class UserRepository extends AbstractRepository
 {
 
-    public function getUser($login, $password, $clientId)
+    public function getUser($login, $clientId)
     {
-        $user = $this->database->query('SELECT user_id, client_id FROM `user` WHERE login=? AND password=? AND client_id=?', $login, $password, $clientId);
+        $user = $this->database->query('SELECT user_id, client_id FROM `user` WHERE login=? AND client_id=?', $login, $clientId);
         return $user->fetch();
     }
 

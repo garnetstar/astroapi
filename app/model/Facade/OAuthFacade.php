@@ -16,6 +16,7 @@ use App\Model\Repository\AccessTokenRepository;
 use App\Model\Repository\RefreshTokenRepository;
 use App\Model\Repository\UserRepository;
 use Nette\FileNotFoundException;
+use Nette\Security\Passwords;
 
 class OAuthFacade
 {
@@ -72,9 +73,9 @@ class OAuthFacade
      * @return array
      * @throws Error\NotFoundException
      */
-    public function getToken($login, $password, $clientId)
+    public function getToken($login, $clientId)
     {
-        if (!$user = $this->userRepository->getUser($login, $password, $clientId)) {
+        if (!$user = $this->userRepository->getUser($login, $clientId)) {
             throw new NotFoundException('User does not exists');
         }
 

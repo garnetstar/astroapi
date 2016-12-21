@@ -56,10 +56,20 @@ class DiaryFacade
                 "from" => $one->from->format("Y-m-d H:i:s"),
                 "to" => $one->to->format("Y-m-d H:i:s"),
                 "counter" => $one->counter,
+                "latitude" => $one->latitude,
+                "longitude" => $one->longitude,
+                "weather" => $one->weather,
+                "log" => $one->log,
+                "timestamp" => $one->timestamp->format("Y-m-d H:i:s"),
                 "deleted" => $one->deleted
             ];
             $objects[] = $oneObject;
         }
+
+        // po kazdem stazeni dat je treba navysit counter
+        $this->settingsRepository->increaseCounter();
+
+        //
 
         return [
             'objects' => $objects,
@@ -67,39 +77,37 @@ class DiaryFacade
             'next_id' => $lastAutoincrement,
             'user_id' => $user_id,
         ];
+
+
     }
 
-    public function syncFrom($objects, $authToken, $counter)
+    public function syncFrom($objects, $authToken)
     {
-
-        $updated = false;
-
         $userId = $this->userRepository->getUserIdByAccessToken($authToken);
 
         $this->database->beginTransaction();
-
-        foreach ($objects as $object) {
-
-            $clientRowCounter = $object['row_counter'];
-            try {
-                $this->diaryRepository->add($userId, $object['guid'], $object['from'], $object['to'], $object['latitude'], $object['longitude'], $object['weather'], $object['log'], $object['notice'], $object['deleted']);
-                $updated = true;
-            } catch (UniqueConstraintViolationException $e) {
-                // guid uz v databazi je
-                $serverRowCounter = $this->diaryRepository->getOne($object['guid'])['counter'];
-
-                if ($serverRowCounter <= $counter) {
-                    $this->diaryRepository->update($userId, $object['guid'], $object['from'], $object['to'], $object['latitude'], $object['longitude'], $object['weather'], $object['log'], $object['notice'], $object['deleted']);
-                    $updated = true;
+        try {
+            foreach ($objects as $object) {
+                // nové objekty, jejich GUID by nemělo být v databázi
+                if ($object['new'] == 1) {
+                    $this->diaryRepository->add($userId, $object['guid'], $object['from'], $object['to'], $object['latitude'], $object['longitude'], $object['weather'], $object['log'], $object['deleted']);
                 } else {
-                    $this->database->rollBack();
-                    throw BadRequestException::unprocessableEntity([], 'version conflict ');
+
+                    $serverRowCounter = $this->diaryRepository->getOne($object['guid'])['counter'];
+
+                    if ($serverRowCounter <= $object['row_counter']) {
+                        $this->diaryRepository->update($userId, $object['guid'], $object['from'], $object['to'], $object['latitude'], $object['longitude'], $object['weather'], $object['log'], $object['deleted']);
+                    } else {
+
+                        throw BadRequestException::unprocessableEntity([], 'version conflict ');
+                    }
                 }
             }
-        }
-
-        if ($updated) {
-            $this->settingsRepository->increaseCounter();
+        } catch
+        (UniqueConstraintViolationException $e) {
+            //U nových objektů je konflikt s jejich GUID
+            throw BadRequestException::unprocessableEntity([], 'unique id conflict');
+            $this->database->rollBack();
         }
 
         $this->database->commit();

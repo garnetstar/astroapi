@@ -9,6 +9,8 @@
 namespace App\Model\Repository;
 
 
+use Nette\Utils\DateTime;
+
 class DiaryRepository extends AbstractRepository
 {
 
@@ -29,7 +31,7 @@ class DiaryRepository extends AbstractRepository
      * @param $log
      * @param $notice
      */
-    public function add($userId, $guid, $from, $to,  $latitude, $longitude, $weather, $log, $notice, $deleted)
+    public function add($userId, $guid, $from, $to,  $latitude, $longitude, $weather, $log, $deleted)
     {
         $this->database->query('INSERT INTO `diary`', [
             'guid' => $guid,
@@ -39,13 +41,13 @@ class DiaryRepository extends AbstractRepository
             'longitude' => $longitude,
             'weather' => $weather,
             'log' => $log,
-            'notice' => $notice,
             'user_id'=> $userId,
-            'deleted' => $deleted
+            'deleted' => $deleted,
+            'timestamp' => (new DateTime())->format('Y-m-d H:i:s'),
         ]);
     }
 
-    public function update($userId, $guid, $from, $to, $latitude, $longitude, $weather, $log, $notice, $deleted)
+    public function update($userId, $guid, $from, $to, $latitude, $longitude, $weather, $log, $deleted)
     {
         $this->database->query('UPDATE `diary` SET ? WHERE `guid`=?', [
             'from' => $from,
@@ -54,9 +56,9 @@ class DiaryRepository extends AbstractRepository
             'longitude' => $longitude,
             'weather' => $weather,
             'log' => $log,
-            'notice' => $notice,
             'user_id'=>$userId,
-            'deleted'=> $deleted
+            'deleted'=> $deleted,
+            'timestamp' => (new DateTime())->format('Y-m-d H:i:s')
         ], $guid);
     }
 
@@ -83,7 +85,7 @@ class DiaryRepository extends AbstractRepository
      * @return array|\Nette\Database\IRow[]
      */
     public function getActualItems($userId) {
-       return $this->database->query('SELECT * FROM `diary` WHERE user_id=? AND deleted=0', $userId)->fetchAll();
+       return $this->database->query('SELECT * FROM `diary` WHERE user_id=? AND deleted=0  ORDER BY `from`', $userId)->fetchAll();
     }
 
     /**
@@ -91,6 +93,9 @@ class DiaryRepository extends AbstractRepository
      * @return \Nette\Database\ResultSet
      */
     public function softDelete($diary_id) {
-       return $this->database->query('UPDATE `diary` SET `deleted`=1 WHERE diary_id=?', $diary_id);
+       return $this->database->query('UPDATE `diary` SET ? WHERE diary_id=?',[
+           'deleted'=>1,
+           'timestamp'=>(new DateTime())->format('Y-m-d H:i:s')
+       ], $diary_id);
     }
 }

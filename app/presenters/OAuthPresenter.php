@@ -12,6 +12,7 @@ namespace App\Presenters;
 use App\Model\Facade\Error\NotFoundException;
 use App\Model\OAuthRepository;
 use Drahak\Restful\Application\BadRequestException;
+use Nette\Security\AuthenticationException;
 use Nette\Utils\Paginator;
 
 class OAuthPresenter extends BasePresenter
@@ -41,10 +42,14 @@ class OAuthPresenter extends BasePresenter
 
         $this->properFieldException(['login', 'password', 'client_id']);
 
+
         try {
-            $token = $this->oAuthFacade->getToken($this->input->login, $this->input->password, $this->input->client_id);
-        } catch (NotFoundException $e) {
+            $this->user->login($this->input->login, $this->input->password);
+            $token = $this->oAuthFacade->getToken($this->input->login, $this->input->client_id);
+        }catch (AuthenticationException $e) {
             throw BadRequestException::unauthorized('unauthorized');
+        } catch (NotFoundException $e) {
+            throw BadRequestException::unauthorized('unauthorized, bad client_id');
         }
 
         $this->tokenResponse($token['accessToken'], $token['refreshToken']);
