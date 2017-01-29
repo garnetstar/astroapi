@@ -85,7 +85,7 @@ class DiaryRepository extends AbstractRepository
      * @return array|\Nette\Database\IRow[]
      */
     public function getActualItems($userId) {
-       return $this->database->query('SELECT * FROM `diary` WHERE user_id=? AND deleted=0  ORDER BY `from`', $userId)->fetchAll();
+       return $this->database->query('SELECT * FROM `diary` WHERE user_id=? AND deleted=0  ORDER BY `from` DESC', $userId)->fetchAll();
     }
 
     /**

@@ -89,7 +89,7 @@ class DiaryFacade
         try {
             foreach ($objects as $object) {
                 // nové objekty, jejich GUID by nemělo být v databázi
-                if ($object['new'] == 1) {
+                if ((int)$object['new'] == 1) {
                     $this->diaryRepository->add($userId, $object['guid'], $object['from'], $object['to'], $object['latitude'], $object['longitude'], $object['weather'], $object['log'], $object['deleted']);
                 } else {
 
@@ -99,7 +99,7 @@ class DiaryFacade
                         $this->diaryRepository->update($userId, $object['guid'], $object['from'], $object['to'], $object['latitude'], $object['longitude'], $object['weather'], $object['log'], $object['deleted']);
                     } else {
 
-                        throw BadRequestException::unprocessableEntity([], 'version conflict ');
+                        throw BadRequestException::unprocessableEntity([], 'version conflict 1.'.$serverRowCounter.' 2.'.$object['row_counter']);
                     }
                 }
             }
