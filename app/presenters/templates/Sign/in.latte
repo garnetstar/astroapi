@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
-            <h1 class="text-center login-title">Sign in to continue to Bootsnipp</h1>
+            <h1 class="text-center login-title">Astronomický deník</h1>
             <div>
 
                 {if count($form->errors) > 0}
@@ -17,6 +17,9 @@
                     <input n:name="password" type="password" class="form-control" placeholder="Password" required>
                     <button n:name="send" class="btn btn-lg btn-primary btn-block" type="submit">
                         Sign in</button>
+                    <h3 class="text-center">or</h3>
+                    <a href="{link SignUp:}"  class="btn btn-lg btn-success btn-block" type="submit">
+                        Sign up</a>
                 </form>
             </div>
         </div>

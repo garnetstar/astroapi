@@ -7,14 +7,14 @@
     <div class="col-md-8">
         <form n:name="addForm">
             <div class="form-group">
-                <label for="from">From</label>
+                <label for="from">Od</label>
                 <input type="datetime-local" value="{$actualTime}" class="form-control"
-                       id="from" n:name="from">
+                       id="from" n:name="from"  placeholder="Od">
             </div>
             <div class="form-group">
-                <label for="to">Password</label>
+                <label for="to">Do</label>
                 <input n:name="to" type="datetime-local" class="form-control" value="{$actualTime}" id="to"
-                       placeholder="Password">
+                       placeholder="Do">
             </div>
 
             <div class="form-group">
@@ -30,7 +30,7 @@
             </div>
 
             <div class="form-group">
-                <label for="weather">Weather</label>
+                <label for="weather">Počasí</label>
                 <textarea n:name="weather" class="form-control" id="weather" rows="3"></textarea>
             </div>
 
@@ -39,13 +39,7 @@
                 <textarea n:name="log" class="form-control" id="log" rows="3"></textarea>
             </div>
 
-            <div class="form-group">
-                <label for="notice">Log</label>
-                <textarea n:name="notice" class="form-control" id="notice" rows="3"></textarea>
-            </div>
-
-
-            <button type="submit" n:name="add" class="btn btn-primary">Submit</button>
+            <button type="submit" n:name="add" class="btn btn-primary">Uložit záznam</button>
 
             <input type="hidden" n:name="userId"/>
         </form>

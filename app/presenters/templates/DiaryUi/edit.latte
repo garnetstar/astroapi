@@ -8,14 +8,14 @@
     <div class="col-md-8">
         <form n:name="editForm">
             <div class="form-group">
-                <label for="from">From</label>
+                <label for="from">Od</label>
                 <input type="datetime-local" value="{$from}" class="form-control"
                        id="from" n:name="from">
             </div>
             <div class="form-group">
-                <label for="to">To</label>
+                <label for="to">Do</label>
                 <input n:name="to" type="datetime-local" value="{$to}" class="form-control" id="to"
-                       placeholder="Password">
+                       >
             </div>
 
             <div class="form-group">
@@ -31,7 +31,7 @@
             </div>
 
             <div class="form-group">
-                <label for="weather">Weather</label>
+                <label for="weather">Počasí</label>
                 <textarea name="weather" class="form-control" id="weather" rows="3">{$weather}</textarea>
             </div>
 
@@ -46,7 +46,7 @@
             </div>
 
             <input type="hidden" n:name="guid" value="{$guid}">
-            <button type="submit" n:name="add" class="btn btn-primary">Submit</button>
+            <button type="submit" n:name="add" class="btn btn-primary">Uložit záznam</button>
 
         </form>
     </div>

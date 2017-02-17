@@ -16,6 +16,13 @@ class HomepagePresenter extends SecureUIPresenter
     /** @var  Model\Repository\DiaryRepository */
     private $diaryRepository;
 
+    /** @var  Model\Repository\UserRepository */
+    private $userRepository;
+
+    public function injectUserRepository(Model\Repository\UserRepository $userRepository) {
+        $this->userRepository = $userRepository;
+    }
+
     public function injectDataRepository(Model\Repository\DataRepository $dataRepository)
     {
         $this->dataRepository = $dataRepository;
@@ -36,6 +43,7 @@ class HomepagePresenter extends SecureUIPresenter
     public function renderDefault()
     {
         $this->template->anyVariable = 'any value';
+        $this->template->user = $this->userRepository->getUserById($this->user->identity->getId());
     }
 
     public function handleDelete($diary_id)

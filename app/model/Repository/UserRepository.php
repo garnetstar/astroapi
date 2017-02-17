@@ -20,12 +20,28 @@ class UserRepository extends AbstractRepository
         return $user->fetch();
     }
 
+    public function getUserById($userId)
+    {
+        $user = $this->database->query('SELECT * FROM `user` WHERE user_id=?', $userId);
+        return $user->fetch();
+    }
+
     /**
      * @param $accessToken
      * @return integer
      */
     public function getUserIdByAccessToken($accessToken) {
         return $this->database->query('SELECT `user_id` FROM `access_token` WHERE `access_token`=?', $accessToken)->fetch()['user_id'];
+    }
+
+    public function addUser($firstName, $surname, $login, $password, $clientId) {
+        $this->database->query('INSERT INTO `user`', [
+            'surname' => $surname,
+            'first_name' => $firstName,
+            'login' => $login,
+            'password' => $password,
+            'client_id' => $clientId,
+        ]);
     }
 
 } 

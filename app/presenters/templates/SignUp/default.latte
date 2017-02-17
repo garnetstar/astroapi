@@ -1,0 +1,44 @@
+{block content}
+
+<div class="container text-center">
+    <form n:name="signUpForm" class="form-horizontal" role="form">
+        <h2 class="text-center">Registrační formulář</h2>
+
+        <div class="form-group">
+            <label for="firstName" class="col-sm-4 control-label">Jméno</label>
+
+            <div class="col-sm-4">
+                <input n:name="firstName" type="text" id="firstName" placeholder="Jméno" class="form-control" autofocus>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="firstName" class="col-sm-4 control-label">Příjmení</label>
+
+            <div class="col-sm-4">
+                <input n:name="surname" type="text" id="surname" placeholder="Příjmení" class="form-control" autofocus>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="login" class="col-sm-4 control-label">Email</label>
+
+            <div class="col-sm-4">
+                <input n:name="login" type="email" id="login" placeholder="Email" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password" class="col-sm-4 control-label">Heslo</label>
+
+            <div class="col-sm-4">
+                <input n:name="password" type="password" id="password" placeholder="heslo" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-4">
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </div>
+        </div>
+    </form>
+    <!-- /form -->
+</div> <!-- ./container -->
+
