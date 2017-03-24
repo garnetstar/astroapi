@@ -9,6 +9,8 @@
 namespace App\Presenters;
 
 
+use App\lib\KeyGenerator\KeyGeneratorInterface;
+use App\lib\UUID;
 use App\Model\Repository\DiaryRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
@@ -20,11 +22,18 @@ class DiaryUiPresenter extends SecureUIPresenter
     /** @var  DiaryRepository */
     private $diaryRepository;
 
+/** @var  KeyGeneratorInterface */
+    private $keyGenerator;
+
     private $diaryId;
 
     public function injectDiaryRepository(DiaryRepository $diaryRepository)
     {
         $this->diaryRepository = $diaryRepository;
+    }
+
+    public function injectKeyGenerator(KeyGeneratorInterface $keyGenerator) {
+        $this->keyGenerator = $keyGenerator;
     }
 
     public function actionAdd()
@@ -66,7 +75,10 @@ class DiaryUiPresenter extends SecureUIPresenter
         $to = str_replace("T", " ", $val->to);
         $userId = $val->userId;
 
-        $this->diaryRepository->add($userId, null, $from, $to, $val->latitude, $val->longitude, $val->weather, $val->log, $val->notice, 0);
+        // vytvořit unikáktní id
+        $guid= UUID::v4();
+
+        $this->diaryRepository->add($userId, $guid, $from, $to, $val->latitude, $val->longitude, $val->weather, $val->log, $val->notice, 0);
 
         $this->redirect("Homepage:default");
     }

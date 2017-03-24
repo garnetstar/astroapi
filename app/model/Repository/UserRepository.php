@@ -8,6 +8,7 @@
 
 namespace App\Model\Repository;
 
+use App\lib\KeyGenerator\KeyGeneratorInterface;
 use Nette\Security\Passwords;
 use Tracy\Debugger;
 

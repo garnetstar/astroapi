@@ -45,7 +45,6 @@ class DiaryFacade
     {
 //        $this->settingsRepository->increaseCounter();
         $serverCounter = $this->settingsRepository->getCounter() - 1;
-        $lastAutoincrement = $this->diaryRepository->getNextAutoincrement();
 
         $objects = array();
         $objectsRaw = $this->diaryRepository->getData($counter, $user_id);
@@ -74,7 +73,6 @@ class DiaryFacade
         return [
             'objects' => $objects,
             'servercounter' => $serverCounter,
-            'next_id' => $lastAutoincrement,
             'user_id' => $user_id,
         ];
 
