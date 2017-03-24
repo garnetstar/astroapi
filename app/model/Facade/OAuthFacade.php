@@ -15,6 +15,7 @@ use App\Model\Facade\Error\NotFoundException;
 use App\Model\Repository\AccessTokenRepository;
 use App\Model\Repository\RefreshTokenRepository;
 use App\Model\Repository\UserRepository;
+use App\Presenters\SecurePresenter;
 use Nette\FileNotFoundException;
 use Nette\Security\Passwords;
 
@@ -40,10 +41,14 @@ class OAuthFacade
     /** @var  int */
     private $refreshTokenDuration;
 
-    public function __construct($accessTokenDuration, $refreshTokenDuration, KeyGeneratorInterface $keyGenerator, UserRepository $userRepository, AccessTokenRepository $accessTokenRepository, RefreshTokenRepository $refreshTokenRepository, ExpirationFactory $expirationFactory)
+    /** @var  string */
+    private $clientId;
+
+    public function __construct($accessTokenDuration, $refreshTokenDuration, $clientId, KeyGeneratorInterface $keyGenerator, UserRepository $userRepository, AccessTokenRepository $accessTokenRepository, RefreshTokenRepository $refreshTokenRepository, ExpirationFactory $expirationFactory)
     {
         $this->keyGenerator = $keyGenerator;
         $this->userRepository = $userRepository;
+        $this->clientId = $clientId;
         $this->accessTokenRepository = $accessTokenRepository;
         $this->refreshTokenRepository = $refreshTokenRepository;
         $this->expirationFactory = $expirationFactory;
@@ -58,11 +63,31 @@ class OAuthFacade
      */
     public function authorize($accessToken)
     {
+        //autorizace pomocí Google id_token
+        try {
+            $client = new \Google_Client(['client_id' => $this->clientId]);
+
+            if ($data = $client->verifyIdToken($accessToken)) {
+
+                if(!$userId = $this->userRepository->getUserIdByLogin($data["email"],2)){
+                    $userId = $this->userRepository->addUser($data["given_name"],$data["family_name"],$data['email'],"",UserRepository::CLIENT_GOOGLE);
+                }
+                return [
+                    "user_id" => $userId,
+                    "client_id" => 2
+                ];
+
+            }
+        } catch (\UnexpectedValueException $e) {
+            echo $e->getMessage();
+            die("error ssdfsf");
+        }
+
         if (!$token = $this->accessTokenRepository->getAccessToken($accessToken)) {
             throw new NotFoundException('access_token not found');
         }
 
-        return $token;
+        return (array) $token;
     }
 
     /**

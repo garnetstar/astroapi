@@ -47,7 +47,7 @@ class DiaryFacade
         $serverCounter = $this->settingsRepository->getCounter() - 1;
         $lastAutoincrement = $this->diaryRepository->getNextAutoincrement();
 
-//        print_r($this->diaryRepository->getData($counter, $user_id));
+        $objects = array();
         $objectsRaw = $this->diaryRepository->getData($counter, $user_id);
         foreach ($objectsRaw as $one) {
 
@@ -81,10 +81,8 @@ class DiaryFacade
 
     }
 
-    public function syncFrom($objects, $authToken)
+    public function syncFrom($objects, $userId)
     {
-        $userId = $this->userRepository->getUserIdByAccessToken($authToken);
-
         $this->database->beginTransaction();
         try {
             foreach ($objects as $object) {
@@ -99,7 +97,7 @@ class DiaryFacade
                         $this->diaryRepository->update($userId, $object['guid'], $object['from'], $object['to'], $object['latitude'], $object['longitude'], $object['weather'], $object['log'], $object['deleted']);
                     } else {
 
-                        throw BadRequestException::unprocessableEntity([], 'version conflict 1.'.$serverRowCounter.' 2.'.$object['row_counter']);
+                        throw BadRequestException::unprocessableEntity([], 'version conflict 1.' . $serverRowCounter . ' 2.' . $object['row_counter']);
                     }
                 }
             }

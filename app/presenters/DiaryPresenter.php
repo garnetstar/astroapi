@@ -38,8 +38,8 @@ class DiaryPresenter extends SecurePresenter
      */
     public function actionList($id)
     {
-        $user_id = $this->userRepository->getUserIdByAccessToken($this->input->access_token);
-        $this->resource = $this->diaryFacade->syncTo($id, $user_id);
+//        $user_id = $this->userRepository->getUserIdByAccessToken($this->input->access_token);
+        $this->resource = $this->diaryFacade->syncTo($id, $this->userId);
     }
 
     /*
@@ -66,7 +66,7 @@ class DiaryPresenter extends SecurePresenter
             throw BadRequestException::unprocessableEntity([], 'Wrong data format');
         }
 
-        $this->diaryFacade->syncFrom($this->input->objects, $this->authToken);
+        $this->diaryFacade->syncFrom($this->input->objects, $this->userId);
         $this->resource->status = 'ok';
     }
 

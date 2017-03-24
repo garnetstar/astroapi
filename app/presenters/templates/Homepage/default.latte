@@ -1,8 +1,11 @@
 {block content}
 
-
+{if isset($user->getIdentity()->data['picture'])}
+<img style="float:right;width:50px;margin-top: 10px;" src="{$user->getIdentity()->data['picture']}"/>
+{/if}
 <h1>Astronomický deník</h1>
-<div style="float:right"><b>{$user->first_name} {$user->surname}</b> <a href="{link Sign:out}">odhlásit</a> </div>
+<div style="float:right"><b>{$user->getIdentity()->data['first_name']} {$user->getIdentity()->data['surname']}</b>
+    ({$user->getIdentity()->data['login']}) <a href="{link Sign:out}">odhlásit</a></div>
 <a href="/diary-ui/add" class="btn btn-info" role="button">Nový záznam</a>
 <table class="table table-striped">
     <thead>
@@ -22,13 +25,18 @@
         <th scope="row">{$item->diary_id}</th>
         <td>{$item->guid}</td>
         <td>{$item->from|date:'%d.%m.%Y %H:%M'}</td>
-        <td>{$hour = $item->to->diff($item->from,true)->days * 24 + $item->to->diff($item->from,true)->h . "h " .$item->to->diff($item->from,true)->format("%H:%M")}</td>
+        <td>{$hour = $item->to->diff($item->from,true)->days * 24 + $item->to->diff($item->from,true)->h . "h "
+            .$item->to->diff($item->from,true)->format("%H:%M")}
+        </td>
         <td>{$item->log}</td>
         <td>{$item->weather}</td>
-        <td><a target="_blank" href="http://maps.google.com/maps?q=loc:{$item->latitude},{$item->longitude}">{$item->latitude} {$item->longitude}</a></td>
-        <td  class="text-right">
-            <a href="{link delete! $item->diary_id}" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-trash"></span></a>
-            <a href="{link DiaryUi:edit $item->diary_id}" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+        <td><a target="_blank" href="http://maps.google.com/maps?q=loc:{$item->latitude},{$item->longitude}">{$item->latitude}
+            {$item->longitude}</a></td>
+        <td class="text-right">
+            <a href="{link delete! $item->diary_id}" class="btn btn-sm btn-default"><span
+                    class="glyphicon glyphicon-trash"></span></a>
+            <a href="{link DiaryUi:edit $item->diary_id}" class="btn btn-sm btn-default"><span
+                    class="glyphicon glyphicon-pencil"></span></a>
         </td>
     </tr>
 

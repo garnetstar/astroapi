@@ -10,6 +10,9 @@ parameters:
 	collection:
 		perPage: 10
 
+	googleApi:
+		clientId: "171814397882-qoafbodpid52h7lh0pc98bruc9vv16vs.apps.googleusercontent.com"
+
 
 php:
 	date.timezone: Europe/Prague
@@ -52,12 +55,15 @@ services:
 		arguments:
 			- %duration.accessToken%
 			- %duration.refreshToken%
+			- %googleApi.clientId%
 
 restful:
     convention: 'snake_case'
     cacheDir: '%tempDir%/cache'
     jsonpKey: 'jsonp'
     prettyPrintKey: 'pretty'
+
+
     routes:
         generateAtStart: FALSE
         prefix: resources
