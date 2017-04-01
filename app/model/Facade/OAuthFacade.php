@@ -66,28 +66,25 @@ class OAuthFacade
         //autorizace pomocí Google id_token
         try {
             $client = new \Google_Client(['client_id' => $this->clientId]);
-
             if ($data = $client->verifyIdToken($accessToken)) {
-
-                if(!$userId = $this->userRepository->getUserIdByLogin($data["email"],2)){
-                    $userId = $this->userRepository->addUser($data["given_name"],$data["family_name"],$data['email'],"",UserRepository::CLIENT_GOOGLE);
+                if (!$userId = $this->userRepository->getUserIdByLogin($data["email"], 2)) {
+                    $userId = $this->userRepository->addUser($data["given_name"], $data["family_name"], $data['email'], "", UserRepository::CLIENT_GOOGLE);
                 }
                 return [
                     "user_id" => $userId,
                     "client_id" => 2
                 ];
 
+            } else {
+                throw new NotFoundException('expired');
             }
         } catch (\UnexpectedValueException $e) {
-            echo $e->getMessage();
-            die("error ssdfsf");
-        }
 
-        if (!$token = $this->accessTokenRepository->getAccessToken($accessToken)) {
-            throw new NotFoundException('access_token not found');
+            if (!$token = $this->accessTokenRepository->getAccessToken($accessToken)) {
+                throw new NotFoundException('access_token not found');
+            }
         }
-
-        return (array) $token;
+        return (array)$token;
     }
 
     /**

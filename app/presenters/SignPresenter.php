@@ -15,20 +15,6 @@ class SignPresenter extends Nette\Application\UI\Presenter
     {
     }
 
-    /**
-     * Sign-in form factory.
-     * @return Nette\Application\UI\Form
-     */
-//	protected function createComponentSignInForm()
-//	{
-//		$form = $this->factory->create();
-//		$form->onSuccess[] = function ($form) {
-//			$form->getPresenter()->redirect('Homepage:');
-//		};
-//		return $form;
-//	}
-
-
     public function createComponentSignInForm()
     {
         $form = new Nette\Application\UI\Form();

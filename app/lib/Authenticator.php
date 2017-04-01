@@ -24,6 +24,5 @@ class Authenticator extends Object implements IAuthenticator {
      */
     function authenticate(array $credentials)
     {
-        die("aaaaaaaaaaaa");
     }
 }

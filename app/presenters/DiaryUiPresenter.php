@@ -12,6 +12,7 @@ namespace App\Presenters;
 use App\lib\KeyGenerator\KeyGeneratorInterface;
 use App\lib\UUID;
 use App\Model\Repository\DiaryRepository;
+use App\Model\Repository\SettingsRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\DateTime;
@@ -21,6 +22,9 @@ class DiaryUiPresenter extends SecureUIPresenter
 {
     /** @var  DiaryRepository */
     private $diaryRepository;
+
+    /** @var  SettingsRepository */
+    private $settingsRepository;
 
 /** @var  KeyGeneratorInterface */
     private $keyGenerator;
@@ -32,6 +36,9 @@ class DiaryUiPresenter extends SecureUIPresenter
         $this->diaryRepository = $diaryRepository;
     }
 
+    public function injectSettingsRepository(SettingsRepository $settingsRepository) {
+        $this->settingsRepository = $settingsRepository;
+    }
     public function injectKeyGenerator(KeyGeneratorInterface $keyGenerator) {
         $this->keyGenerator = $keyGenerator;
     }
@@ -78,6 +85,7 @@ class DiaryUiPresenter extends SecureUIPresenter
         // vytvořit unikáktní id
         $guid= UUID::v4();
 
+        $this->settingsRepository->increaseCounter();
         $this->diaryRepository->add($userId, $guid, $from, $to, $val->latitude, $val->longitude, $val->weather, $val->log, $val->notice, 0);
 
         $this->redirect("Homepage:default");
@@ -124,6 +132,7 @@ class DiaryUiPresenter extends SecureUIPresenter
         $to = str_replace("T", " ", $val->to);
         $userId = $this->user->getId();
 
+        $this->settingsRepository->increaseCounter();
         $this->diaryRepository->update($userId, $val->guid, $from, $to, $val->latitude, $val->longitude, $val->weather, $val->log, $val->notice, 0);
 
         $this->redirect("Homepage:default");

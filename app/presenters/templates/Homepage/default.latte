@@ -10,7 +10,7 @@
 <table class="table table-striped">
     <thead>
     <tr>
-        <th>id</th>
+        <!--<th>id</th>-->
         <th>guid</th>
         <th>Datum</th>
         <th>Délka</th>
@@ -22,8 +22,8 @@
     </thead>
     <tbody>
     <tr n:foreach="$items as $item">
-        <th scope="row">{$item->diary_id}</th>
-        <td>{$item->guid}</td>
+        <!--<th scope="row">{$item->diary_id}</th>-->
+        <td style="font-size: 10px">{$item->guid}</td>
         <td>{$item->from|date:'%d.%m.%Y %H:%M'}</td>
         <td>{$hour = $item->to->diff($item->from,true)->days * 24 + $item->to->diff($item->from,true)->h . "h "
             .$item->to->diff($item->from,true)->format("%H:%M")}

@@ -33,6 +33,8 @@ class DiaryFacade
     /** @var  Context */
     private $database;
 
+    private $counterIncreased = false;
+
     public function __construct(Context $database, DiaryRepository $diaryRepository, SettingsRepository $settingsRepository, UserRepository $userRepository)
     {
         $this->diaryRepository = $diaryRepository;
@@ -43,9 +45,7 @@ class DiaryFacade
 
     public function syncTo($counter, $user_id)
     {
-//        $this->settingsRepository->increaseCounter();
-        $serverCounter = $this->settingsRepository->getCounter() - 1;
-
+        $serverCounter = $this->settingsRepository->getCounter();
         $objects = array();
         $objectsRaw = $this->diaryRepository->getData($counter, $user_id);
         foreach ($objectsRaw as $one) {
@@ -65,11 +65,6 @@ class DiaryFacade
             $objects[] = $oneObject;
         }
 
-        // po kazdem stazeni dat je treba navysit counter
-        $this->settingsRepository->increaseCounter();
-
-        //
-
         return [
             'objects' => $objects,
             'servercounter' => $serverCounter,
@@ -86,15 +81,18 @@ class DiaryFacade
             foreach ($objects as $object) {
                 // nové objekty, jejich GUID by nemělo být v databázi
                 if ((int)$object['new'] == 1) {
+                    $this->increaseCounter();
                     $this->diaryRepository->add($userId, $object['guid'], $object['from'], $object['to'], $object['latitude'], $object['longitude'], $object['weather'], $object['log'], $object['deleted']);
+                    $modify = true;
                 } else {
 
                     $serverRowCounter = $this->diaryRepository->getOne($object['guid'])['counter'];
 
                     if ($serverRowCounter <= $object['row_counter']) {
+                        $this->increaseCounter();
                         $this->diaryRepository->update($userId, $object['guid'], $object['from'], $object['to'], $object['latitude'], $object['longitude'], $object['weather'], $object['log'], $object['deleted']);
+                        $modify = true;
                     } else {
-
                         throw BadRequestException::unprocessableEntity([], 'version conflict 1.' . $serverRowCounter . ' 2.' . $object['row_counter']);
                     }
                 }
@@ -107,5 +105,13 @@ class DiaryFacade
         }
 
         $this->database->commit();
+    }
+
+    private function increaseCounter() {
+        if(! $this->counterIncreased) {
+            //pokud došlo k úpravě dat, je třeba navýšit verzi serverCounteru
+            $this->settingsRepository->increaseCounter();
+            $this->counterIncreased = true;
+        }
     }
 }
