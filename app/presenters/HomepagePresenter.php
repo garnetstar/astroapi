@@ -19,6 +19,13 @@ class HomepagePresenter extends SecureUIPresenter
     /** @var  Model\Repository\UserRepository */
     private $userRepository;
 
+    /** @var  Model\Repository\SettingsRepository */
+    private $settingsRepository;
+
+    public function injectSettingsReposiotry(Model\Repository\SettingsRepository $settingsRepository) {
+        $this->settingsRepository = $settingsRepository;
+    }
+
     public function injectUserRepository(Model\Repository\UserRepository $userRepository) {
         $this->userRepository = $userRepository;
     }
@@ -42,12 +49,12 @@ class HomepagePresenter extends SecureUIPresenter
 
     public function renderDefault()
     {
-        $this->template->anyVariable = 'any value';
-        $this->template->user = $this->userRepository->getUserById($this->user->identity->getId());
+        $this->template->user = $this->user;
     }
 
     public function handleDelete($diary_id)
     {
+        $this->settingsRepository->increaseCounter();
         $this->diaryRepository->softDelete($diary_id);
         $this->redirect('this');
     }
